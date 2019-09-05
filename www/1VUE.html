@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script type="text/javascript" src='./lib/vue.js'></script>
+</head>
+<body>
+	<!--渲染数据-->
+	<!--将来new的实例会控制这个元素中的所有内容-->
+	<div id="one"><p>{{ msg }}</p></div><!--MVVM中的V（展示层）vue实例控制的元素区域就是我们的V-->
+	<script type="text/javascript">
+		//使用构造函数创建一个vm对象，vue实例。
+		//整个vm对象是mvvm中的vm层，就是我们MVVM中的VM调度者
+		//当我们导入包之后，在浏览器的内存中，就多了一个vue构造函数
+		//vm实例去控制一个id为one的元素
+		var vm = new Vue({
+			el: '#one',//el属性表示，当前我们new的这个Vue实例，要控制页面上的哪个区域
+			data: { //data属性中，可以看做页面的model。存放的是el中要用到的数据也是mvvm中的m层（数据层）。专门用来保存每个页面的数据。
+				msg: '欢迎学习vue！'//通过vue提供的指令，很方便的就能把数据渲染到页面上，程序员不再手动操作DOM元素了【前端的vue之类的框架，不提倡我们去手动操作dom元素了】
+			}
+		});
+		/*jquery中往dom元素中添加数据的语法假设p的id为content
+		$('$content').text(data.msg);
+		*/
+	</script>
+</body>
+</html>
