@@ -245,7 +245,7 @@ var person1 = new person('linx','linx-d',22,'blue');
 
 
 
-## 跑马灯效果实现
+### 跑马灯效果实现
 
 ~~~
 使用箭头函数可以解决this的指向问题，
@@ -307,4 +307,94 @@ clearInterval(Interval);
 </body>
 </html>
 ````
+
+
+
+### 事件修饰符
+
+- .stop阻止冒泡
+- .prevent阻止默认事件
+- .capture添加监听器时使用事件捕获模式
+- .self只当事件在元素本身（比如不是子元素）触发时触发回调
+- .once事件只触发一次
+
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>事件修饰符</title>
+	<script type="text/javascript" src="./lib/vue.js"></script>
+	<style type="text/css">
+		.inner {
+			height: 200px;
+			background-color: skyblue;
+		}
+		.outner {
+			background-color: pink;
+			padding: 20px;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<!-- .stop事件修饰符阻止所有冒泡事件 -->
+		<!--
+		<div class="inner" @click="dclick">
+			<input type="button" value="按钮" @click.stop="iclick">
+		</div> -->
+
+		<!-- .capture事件修饰符捕获事件 -->
+		<!--
+		<div class="inner" @click.capture="dclick">
+			<input type="button" value="按钮" @click="iclick">
+		</div>-->
+
+        <!-- .prevent事件修饰符阻止事件的默认行为 -->
+        <!-- .once事件修饰符 指定事件只触发一次 -->
+        <!--
+		<a href="http://www.baidu.com" @click.prevent.once="baiduclick">去百度</a>-->
+
+		<!-- .stop事件修饰符和.self事件修饰符的区别 -->
+		<!-- .stop事件修饰符真正阻止了事件的冒泡行为 -->
+		<!--<div class="outner" @click="outclick">
+			<div class="inner" @click="dclick">
+				<input type="button" value="按钮" @click.stop="iclick">
+			</div>
+		</div>-->
+
+		<!-- .self事件修饰符只阻止了自己身上冒泡行为的触发，并不会真正阻止冒泡行为 -->
+		<div class="outner" @click="outclick">
+			<div class="inner" @click.self="dclick">
+				<input type="button" value="按钮" @click="iclick">
+			</div>
+		</div>
+	</div>
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+
+			},
+			methods: {
+				iclick(){
+					console.log("这是按钮输出的");
+				},
+				dclick(){
+					console.log("这是点击div输出的");
+				},
+				baiduclick(){
+					console.log("点击百度");
+				},
+				outclick(){
+					console.log("点击外层div");
+				}
+			}
+		});
+	</script>
+</body>
+</html>
+````
+
+
 
