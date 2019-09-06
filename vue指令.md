@@ -398,3 +398,347 @@ clearInterval(Interval);
 
 
 
+#### v-model双向数据绑定
+
+~~~
+	v-bind 只能实现数据的单向绑定，从M自动绑定到V，无法实现数据的双向绑定。但是可以在很多地方运用。
+	使用方法：在要绑定的属性前面加v-bind: 或者直接简写冒号(:)
+	
+	v-model 指令，可以实现表单元素和model中数据的双向绑定
+	注意：v-model只能运用在表单元素中 
+	例如: inpug(text,email,tell,number),textarea，radio，checkbox，select，address
+	使用方法：v-model="msg"  
+	注意：不加冒号
+~~~
+
+#### 计算器calc案例
+
+~~~
+单词：
+calc计算器		result结果	 
+sym符号	
+~~~
+
+
+
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script type="text/javascript" src="./lib/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<input type="text" v-model="n1">
+		<select v-model="sym">
+			<option value="+">+</option>
+			<option value="-">-</option>
+			<option value="*">*</option>
+			<option value="/">/</option>
+		</select>
+		<input type="text" v-model="n2">
+		<input type="button" value="=" @click="calc">
+		<input type="text" v-model="result">
+	</div>
+	
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				n1: "0",
+				sym: "+",
+				n2: "0",
+				result: "0"
+			},
+			methods: {
+				calc() {
+					switch(this.sym){
+						case "+":
+						this.result = parseInt(this.n1)+parseInt(this.n2);
+						break;
+						case "-":
+						this.result = parseInt(this.n1)-parseInt(this.n2);
+						break;
+						case "*":
+						this.result = parseInt(this.n1)*parseInt(this.n2);
+						break;
+						case "/":
+						this.result = parseInt(this.n1)/parseInt(this.n2);
+						break;
+					}
+
+					//投机取巧的方式，在正式开发中不提倡使用，在必须时可以使用
+					/*
+					var str = parseInt(this.n1)+this.sym+parseInt(this.n2);
+					this.result = eval(str);*/
+				}
+			}
+		});
+	</script>
+</body>
+</html>
+````
+
+
+
+#### 通过属性绑定为元素设置class
+
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script type="text/javascript" src="./lib/vue.js"></script>
+	<style type="text/css">
+		.red {
+			color: red;
+		}
+		.thin {
+			font-weight: 200;
+		}
+		.italic {
+			font-style: italic;
+		}
+		.active {
+			letter-spacing: 0.5em;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<h1 :class="strobj">H1标题通过属性绑定设置class</h1>
+		<h1 :class="['red','thin','italic',flag?'active':'']">H1标题通过属性绑定设置class</h1>
+		<h1 :class="['red','thin','italic',{active:true}]">H1标题通过属性绑定设置class</h1>
+		<h1 :class="{red: true, active: false, thin: false, italic: true}">H1标题通过属性绑定设置class</h1>
+		<h1 :class="strobj">H1标题通过属性绑定设置class</h1>	    
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				flag: true,
+				strobj: {red: true, thin: true, active: true, italic: true}
+			},
+			methods: {}
+		});
+	</script>
+</body>
+</html>
+````
+
+
+
+#### 通过属性绑定为元素设置内联样式
+
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="./lib/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<!--通过普通的方法设置行内样式-->
+		<h1 style="color: red; font-weight: 200;">H1标题通过属性绑定设置内联样式</h1>
+
+        <!--通过属性绑定的方法为元素设置行内样式，属性名可以不加引号，属性值必须加引号，否则浏览器就会把属性值作为变量解析去vm对象中的data去查找这个变量。注意：带特殊符号例如横杠(-)的属性名一定要用单引号包裹起来，这是对象中的规则-->
+		<h1 :style="{color: 'skyblue', 'font-weight': 200}">H1标题通过属性绑定设置内联样式</h1>
+
+        
+		<h1 :style="strObj">H1标题通过属性绑定设置内联样式</h1>
+
+		<h1 :style="[strObj, strObj2]">H1标题通过属性绑定设置内联样式</h1>
+	</div>
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				/*strObj的值是一个对象 所以不用引号包裹。包裹起来就是字符串了就不符合属性绑定机制*/
+				italic: 'italic',
+				strObj: {color: 'skyblue', 'font-weight': 200},
+				strObj2: { 'font-style': 'italic'}
+			},
+			methods: {}
+		});
+	</script>
+</body>
+</html>
+````
+
+
+
+#### v-for迭代的四种使用方式
+
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script type="text/javascript" src="./lib/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<!-- 迭代一个普通数组 -->
+		<p v-for="(item, i) in arr">值：{{ item }}----索引：{{ i }}</p>
+<br>
+		<!-- 迭代一个普通对象 -->
+		<p v-for="(key, item, i) in obj">索引：{{ i }}--------键：{{ key }}-----------值：{{item}}</p>
+<br>
+		<!-- 迭代数字 -->
+		<p v-for="number in 10">{{ number }}</p>
+<br>		
+        <!-- 迭代复杂数组 -->
+        <p v-for="(item, i) in arr2">姓名：{{ item.name }} ----年龄：{{ item.age }}---索引：{{ i }}</p>
+	</div>
+	
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				arr: [0, 1, 2, 3, 4, 5, 6],
+				obj: {
+					name: "托尼-仕达克",
+					gender: "男",
+					age: 24
+				},
+				arr2: [{
+					name: "Linx-d",
+					age: 24
+				},{
+					name: "Linx-x",
+					age: 25
+				},{
+					name: "Linx-y",
+					age: 26
+				}]
+			},
+			methods: {}
+		});
+	</script>
+</body>
+</html>
+````
+
+
+
+#### v-for中的key的使用注意事项
+
+**注意**
+
+- v-for循环的时候，key属性只能使用number或者string
+- key在使用的时候，必须使用v-bind属性绑定的形式，指定key的值
+- 在组件中，使用v-for循环的时候，或者在一些特殊星狂中，如果v-for有问题，必须在使用v-for的同事，指定唯一的字符串/数字类型     :key的值
+
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script type="text/javascript" src="./lib/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<label>id:<input type="text" v-model="id"></label>
+		<label>name:<input type="text" v-model="name"></label>
+		
+		<input type="button" @click="add" value="按钮">
+		<p v-for="(item,i) in list" :key="item.id">
+			<input type="checkbox">索引：{{ i }}---id:{{item.id}}---名字:{{ item.name }}
+		</p>
+	</div>
+	
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				id: '',
+				name: '',
+				list: [{
+					id: 1,
+					name: "嬴政"
+				},{
+					id: 2,
+					name: "韩非"
+				},{
+					id: 3,
+					name: "赵高"
+				},{
+					id: 4,
+					name: "吕不韦"
+				},{
+					id: 5,
+					name: "李斯"
+				}]
+			},
+			methods: {
+				add(){
+					this.list.unshift({id: this.id, name: this.name});
+				}
+			}
+		});
+	</script>
+</body>
+</html>
+````
+
+
+
+#### v-if和v-show的使用特点
+
+作用： 让元素在页面中不显示
+
+v-if：删除设置该属性的元素   每次都会重新删除或创建元素
+
+v-show：将设置该属性的元素的显示模式改为none   每次不会重新进行DOM的删除和创建操作，指示切换了元素的display:none；样式
+
+
+
+~~~
+
+v-if 有较高的切换性能消耗	 
+在使用有可能永远不显示的元素时，使用v-if
+
+v-show 有较高的初始渲染消耗 
+在频繁切换该元素是否显示时，使用v-show
+~~~
+
+
+
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script type="text/javascript" src="./lib/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<input type="button" value="按钮" @click="flag=!flag">
+		<p v-if="flag">这是v-if控制的元素</p>
+		<h1 v-show="flag">这是v-show控制的元素</h1>
+	</div>
+	
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				flag: true
+			},
+			methods: {
+				
+			}
+		});
+	</script>
+</body>
+</html>
+````
+

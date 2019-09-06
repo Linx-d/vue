@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="./lib/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<!--通过普通的方法设置行内样式-->
+		<h1 style="color: red; font-weight: 200;">H1标题通过属性绑定设置内联样式</h1>
+
+        <!--通过属性绑定的方法为元素设置行内样式，属性名可以不加引号，属性值必须加引号，否则浏览器就会把属性值作为变量解析去vm对象中的data去查找这个变量。注意：带特殊符号例如横杠(-)的属性名一定要用单引号包裹起来，这是对象中的规则-->
+		<h1 :style="{color: 'skyblue', 'font-weight': 200}">H1标题通过属性绑定设置内联样式</h1>
+
+        
+		<h1 :style="strObj">H1标题通过属性绑定设置内联样式</h1>
+
+		<h1 :style="[strObj, strObj2]">H1标题通过属性绑定设置内联样式</h1>
+	</div>
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				/*strObj的值是一个对象 所以不用引号包裹。包裹起来就是字符串了就不符合属性绑定机制*/
+				italic: 'italic',
+				strObj: {color: 'skyblue', 'font-weight': 200},
+				strObj2: { 'font-style': 'italic'}
+			},
+			methods: {}
+		});
+	</script>
+</body>
+</html>

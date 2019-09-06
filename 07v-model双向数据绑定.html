@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script type="text/javascript" src="./lib/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<!-- <h1>{{ msg }}</h1> -->
+		<!-- v-model双向绑定数据，只能和表单元素配合使用 -->
+		<h1>{{ msg }}</h1>
+		<input type="text" v-bind:value="msg" style="width: 100%" />
+		<input type="text" v-model="msg" style="width: 100%" />
+	</div>
+	
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				msg: "text，html，bind，cloak，on，.once .self .stop .prevent .capture"
+			},
+			methods: {
+
+			}
+		});
+	</script>
+</body>
+</html>
