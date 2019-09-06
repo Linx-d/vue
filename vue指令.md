@@ -135,7 +135,7 @@ var person1 = new person('linx','linx-d',22,'blue');
 
 
 
-#### v-bind
+#### v-bind:
 
 ~~~
 	作用：是vue中，提供的用于绑定属性的指令。
@@ -145,7 +145,9 @@ var person1 = new person('linx','linx-d',22,'blue');
 	在v-bind中可以写合法的js表达式。
 ~~~
 
+注意：        <!-- v-bind绑定属性，就是把元素中的属性和vue实例中的data属性中的变量（属性）进行绑定，让代码在解析时，自动去vue实例找这个变量 -->
 
+缩写： 	冒号(:)
 
 
 
@@ -198,4 +200,111 @@ var person1 = new person('linx','linx-d',22,'blue');
 ````
 
 
+
+#### v-on:
+
+~~~
+	作用：	vue中提供了v-on：事件绑定机制
+	new的Vue实例，vm对象中methods属性定义了当前Vue实例所有可用的方法
+~~~
+
+缩写：	@
+
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>v-on指令学习</title>
+	<script type="text/javascript" src="lib/vue.js"></script>
+    <!--导包使用script-->
+    <!-- -->
+</head>
+<body>
+	<div id="app">
+        <!-- 使用v-bind简写方式绑定属性时，注意要在被绑定属性前加冒号(:) -->
+		<input type="button" :value="msg" :title="msg2" v-on:click="show">
+	</div>
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				msg: "按钮",
+				msg2: "定义的按钮",
+			},
+			methods: {
+				show: function(){
+					alert("hello");
+				}
+			}
+		});
+	</script>
+</body>
+</html>
+````
+
+
+
+## 跑马灯效果实现
+
+~~~
+使用箭头函数可以解决this的指向问题，
+可以通过this访问当前vue实例中的data属性。
+
+vue实例中的方法放在methods对象中，
+在声明方法时可以直接使用：
+myInterval(){} vue会自动将其识别会 myInterval: function(){}
+
+setInterval()方法在每个给定的时间间隔重复给定的函数。
+clearInterval()方法停止setInterval()方法中指定的函数的执行
+示例如下：
+Interval = setInterval(()=>{},500);
+clearInterval(Interval);
+~~~
+
+
+
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>完善跑马灯效果</title>
+	<script type="text/javascript" src="./lib/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<input type="button" value="浪起来" :title="msg" @click="myInterval">
+		<input type="button" value="发育" :title="msg2" @click = "stop">
+		<h4>{{ msg3 }}</h4>
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				msg: "浪",
+				msg2: "发育",
+				msg3: "猥琐发育！别浪....",
+				Interval: null
+			},
+			methods: {
+				myInterval(){
+					if(this.Interval!=null) return;
+					this.Interval = setInterval(()=>{
+						var start = this.msg3.substring(0,1);
+						var end = this.msg3.substring(1);
+						this.msg3 = end+start;
+					},500);
+				},
+				stop(){
+					clearInterval(this.Interval);
+					this.Interval = null;
+				}
+			}
+		});
+	</script>
+</body>
+</html>
+````
 
