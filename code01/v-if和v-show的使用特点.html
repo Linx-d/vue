@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script type="text/javascript" src="./lib/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<input type="button" value="按钮" @click="flag=!flag">
+		<p v-if="flag">这是v-if控制的元素</p>
+		<h1 v-show="flag">这是v-show控制的元素</h1>
+	</div>
+	
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				flag: true
+			},
+			methods: {
+				
+			}
+		});
+	</script>
+</body>
+</html>

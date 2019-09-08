@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>v-on指令学习</title>
+	<script type="text/javascript" src="lib/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<input type="button" :value="msg" :title="msg2" @mouseover="show">
+	</div>
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				msg: "按钮",
+				msg2: "定义的按钮",
+			},
+			methods: {
+				show: function(){
+					alert("hello");
+				}
+			}
+		});
+	</script>
+</body>
+</html>

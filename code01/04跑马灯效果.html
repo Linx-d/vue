@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>跑马灯效果</title>
+	<script type="text/javascript" src="./lib/vue.js"></script>
+	<style type="text/css">
+		[v-cloak] {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<input type="button" value="浪起来" :title="msg" @click="myVar">
+		<input type="button" value="低调" :title="msg2" @click="">
+	</div>
+	<div id="app1" v-html="msg3">
+		
+	</div>
+	
+	<script>
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				msg: "浪",
+				msg2: "发育"
+			},
+			methods: {
+				/*show: function(){
+					var h4 = "猥琐发育，别浪！";
+					var x = h4.substring(0,1);
+					alert(x);
+				}*/
+				myVar: function(){
+					
+					for(var a=1; a<3; a++) {
+						
+						setTimeout(()=>{
+							var h4 = "！猥琐发育，别浪";
+							for(var b=1; b<10; b++) {
+								
+								var x = h4.substring(0,1);
+								var y = h4.substring(1,8);
+								var z = "<h1>"+y+x+"</h1>";
+								//alert(z);
+								var vm1 = new Vue({
+									el: "#app1",
+									data: {
+										msg3: z
+									}
+								});
+								h4=z;
+							}
+						
+					},500);
+					}
+					
+				}
+			}
+		})
+	</script>
+</body>
+</html>
