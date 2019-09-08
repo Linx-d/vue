@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="./lib/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<!-- 过滤器调用时候的格式 {{ msg | 过滤器的名称}} -->
+		<p>{{ msg | changemsg("hi","----") | test }}</p>
+	</div>
+
+	<script>
+		//定义一个Vue全局的过滤器，名字叫做changemsg，过滤器名称需要用引号包裹
+		//定义过滤器的语法： Vue.filter(过滤器的名称,function(msg){});  还可以传入多个参数并且，过滤器可以调用多次，在插值表达式中 用管道符|隔开， 过滤器名称不能重复否则会覆盖
+		//过滤器中的function，第一个参数，已经被规定死了，永远都是管道符前面 传过来的数据
+		Vue.filter('changemsg',function(msg,demo,demo1){
+			//字符串的replace方法，第一个参数，除了可写一个字符串之外，还可以定义一个正则表达式
+			return msg.replace(/够憨/g,"够胆"+demo+demo1);
+		});
+		Vue.filter('test',function(msg){
+			return msg+"=============";
+		});
+
+
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				msg: "你够憨你牛，牛到家了，憨憨 你是真够憨，是真的够憨"
+			},
+			methods: {}
+		});
+	</script>
+</body>
+</html>
