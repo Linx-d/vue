@@ -1,5 +1,73 @@
 # MVVM
 
+## Sublime快捷键
+
+~~~
+shift home选择这一行
+ctrl d 选择页面中所有的选中的代码
+~~~
+
+
+
+## BootStrap知识点
+
+### 使用BootStrap步骤：
+
+1.先导入bootstrap的CDN
+
+~~~
+<!-- 最新版本的 起步链接https://v3.bootcss.com/getting-started/ -->
+
+<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" 
+crossorigin="anonymous"></script>
+
+~~~
+
+2.类知识点
+
+~~~
+为元素添加类 
+1.table赋予表格基本样式
+2.table-bordered 赋予表格和其中每个单元格增加边框
+3.table-striped 给tbody的每一行增加斑马条纹样式
+4.table-hover 可以让tbody中的每一行对鼠标悬停状态作出相应
+<table class="table table-bordered table-hover table-striped"></table>
+
+为父元素添加类 class="form-inline" 可以让子元素在一行显示
+
+按钮的类 
+1.btn 赋予按钮基本样式 
+2.btn-primary 赋予带情景的按钮
+<input type="button" class="btn btn-primary" />
+
+输入框的类
+1.control 赋予输入框基本样式
+<input type="text" class="control" />
+
+带标题的面版 
+1.panel 赋予基本的面版样式
+2.panel-primary 赋予面版情景效果 
+3.panel-heading 赋予面版的头部基本样式 可以和panel-primary配合使用
+4.panel-body 赋予面版的主体基本样式
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Panel title</h3>
+  </div>
+  <div class="panel-body">
+    Panel content
+  </div>
+</div>
+~~~
+
+
+
 ## Vue.js基本代码和MVVM之间的对应关系
 
 MVVM是前端视图层的分层开发思想，主要把每个页面，分成了M、V和VM。其中，VM是MVVM思想的核心，因为，VM是V和M之间的调度者。
@@ -735,6 +803,186 @@ v-show 有较高的初始渲染消耗
 			},
 			methods: {
 				
+			}
+		});
+	</script>
+</body>
+</html>
+````
+
+
+
+#### 品牌案例
+
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>品牌案例</title>
+	<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="./lib/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+			    <h3 class="panel-title">品牌</h3>
+			</div>
+			<div class="panel-body form-inline">
+			    <label>Id: 
+			    	<input type="text" class="form-control" v-model="id">
+			    </label>
+
+			    <label>Name: 
+			    	<input type="text" class="form-control" v-model="name">
+			    </label>
+
+			    <!-- v-on:(@)事件绑定 的值可以加括号，加了括号就可以传参数-->
+			    <input type="button" value="添加" class="btn btn-primary" @click="add">
+
+			    <label>搜索关键词：
+			    	<input type="text" class="form-control" v-model="keywords">
+			    </label>
+			</div>
+		</div>		
+
+		<table class="table table-bordered table-hover table-striped">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Name</th>
+					<th>Time</th>
+					<th>Operation</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="item in search(keywords)" :key="item.id">
+					<td>{{ item.id }}</td>
+					<td>{{ item.name }}</td>
+					<td>{{ item.ctime | changeTime() }}</td>
+					<td>
+						<a href="" @click.prevent="del(item.id)">删除</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+		<div id="app2">
+			<p>{{ strDate | changeTime }}</p>
+		</div>
+	<script>
+		Vue.filter('changeTime',function(strDate,msg=""){
+			var newDate = new Date(strDate);
+			var y = newDate.getFullYear();
+			var m = newDate.getMonth();
+			var d = newDate.getDate();
+			if(msg.toLowerCase()=="yyyy-mm-dd"){
+			//return y+'-'+m+'-'+d;
+
+			//return `$(y)-$(m)-$(d)`;  这里使用模板字符串时，占位符应该使用${};
+			return `${y}-${m}-${d}`;
+		}else{
+			var h = newDate.getHours();
+			var f = newDate.getMinutes();
+			var s = newDate.getSeconds();
+			return `${y}-${m}-${d} ${h}:${f}:${s}`;
+		}
+			
+		});
+
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				id: '',
+				name: '',
+				keywords: '',
+				list: [{
+					id: 1,
+					name: "宝马",
+					ctime: new Date()
+				},{
+					id: 2,
+					name: "奔驰",
+					ctime: new Date()
+				}]
+			},
+			methods: {
+				add(){
+					//console.log('hi');
+					var car = {id: this.id, name: this.name, ctime: new Date()};
+					this.list.push(car);
+				},//methods中的方法之间也要加逗号
+				del(id){
+					/*this.list.some((item,index)=>{
+						if(item.id==id){
+							this.list.splice(index,1);
+							return true;
+							//数组的some方法在解析到true时，立刻停止执行
+						}
+					});*/
+					var index= this.list.findIndex((item)=>{
+						if(item.id==id) return true;
+					});
+					console.log(index);
+					this.list.splice(index,1);
+				},
+				search(keywords){
+					/*var newList = [];
+					this.list.forEach((item)=>{
+						
+						if(item.name.indexOf(keywords) != -1) {
+							newList.push(item);
+						}
+						
+					});
+					return newList;*/
+
+					//es6新方法 includes，filter，some，findIndex
+					return this.list.filter((item)=>{
+						if(item.name.includes(keywords)){
+							return item;
+						}
+					});
+				}
+			}
+		});
+
+		var vm2 = new Vue({
+			el: "#app2",
+			data: {
+				strDate: new Date()
+			},
+			methods: {
+
+			},
+			filters: {
+				//调用过滤器的时候，如果私有过滤器和全局过滤器的名称相同，则遵循先私有后全局的就近调用原则
+				changeTime(strDate,msg=""){
+					var newDate = new Date(strDate);
+					var y = newDate.getFullYear();
+					var m = newDate.getMonth();
+					var d = newDate.getDate();
+					if(msg.toLowerCase()=="yyyy-mm-dd"){
+					//return y+'-'+m+'-'+d;
+
+					//return `$(y)-$(m)-$(d)`;  这里使用模板字符串时，占位符应该使用${};
+					return `${y}-${m}-${d}`;
+				}else{
+					var h = newDate.getHours();
+					var f = newDate.getMinutes();
+					var s = newDate.getSeconds();
+					return `${y}-${m}-${d} ${h}:${f}:${s}++++++++`;
+				}
+				}
 			}
 		});
 	</script>
