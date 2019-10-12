@@ -57,7 +57,7 @@
 6. 在cmd窗口下载相应的包（例如jquery）
 
    ~~~
-   cnpm init -y
+   cnpm init -y  //首先用npm的包管理工具把项目管理起来
    
    cnpm i jquery -S     //这里的i是install的缩写
    ~~~
@@ -222,3 +222,161 @@
 		}
 ~~~
 
+## 作用：
+
+1. 自动在内存中根据指定页面生成一个内存的页面
+2. 自动把打包好的bundle.js追加到页面中去
+
+
+
+# loader配置使用
+
+注意：
+
+~~~
+webpack，默认只能打包处理JS类型的文件，无法处理其它非JS类型的文件；
+
+如果要处理非JS类型的文件，我们需要手动安装一些合适第三方loader加载器
+
+1.如果想要打包处理css文件，需要安装
+cnpm i style-loader css-loader -D
+
+2.打开webpack.config.JS 这个配置文件，在这里面，新增一个配置节点，叫做module，它是一个对象，在这个module对象身上，有个rules属性，这个rules属性是个数组；这个数组中，存放了，所有第三方文件的匹配和处理规则；
+webpack.config.js配置文件代码如下：
+
+
+const path = require('path');
+const htmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+	entry: path.join(__dirname, './src/main.js'),
+	output: {
+		path: path.join(__dirname, "./dist"),
+		filename: 'bundle.js'
+	},
+	plugins: [
+	    new htmlWebpackPlugin({//创建一个 在内存中生成html页面的插件
+	    	//指定 模板页面，将来会根据指定的页面路径，去生成内存中的页面
+	    	template: path.join(__dirname, "src", "index.html"),
+	    	//指定生成的页面名称
+	    	filename: "index.html"
+	    })  //配置插件的节点...
+	],
+	module: {  //这个节点，用于配置所有第三方模块 加载器
+		rules: [//所有第三方模块的匹配规则
+		{  test: /\.css$/,  use: ['style-loader', 'css-loader']}  //配置处理.css文件的第三方loader规则
+		]
+	}
+}
+~~~
+
+
+
+## 打包处理less文件
+
+1. 首先局部安装less-loader内部所依赖的包   //-D代表局部   i代表install
+
+   `cnpm i -less -D`
+
+2. 然后安装less-loader 加载器
+
+   `cnpm i -less-loader -D`
+
+3. 再配置文件webpack.config.js中添加rules规则
+
+   ~~~
+   	module: {
+   		rules: [
+   			{ test: /\.less$/, use: ['style-loader', 'css-loader', 'less-loader']}
+   		]
+   	}
+   ~~~
+
+   
+
+   ## 打包处理scss文件
+
+   1. 首先局部安装sass-loader内部依赖的包 
+
+      `cnpm i node-sass -D`
+
+   2. 然后局部安装sass-loader加载器
+
+      `cnpm i sass-loader -D`
+
+   3. 再配置文件webpack.config.js文配置rules规则
+
+      ~~~
+      	module: {
+      		rules: [
+      			{ test： /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader']}
+      		]
+      	}
+      ~~~
+
+      
+
+## 分析webpack调用第三方loader的过程
+
+1. 首先，webpack发现，我们并没有通过命令的形式，给它指定入口和出口
+2. webpack就会去项目的根目录中，查找一个叫做'webpack.config.js'的配置文件
+3. 当找到配置文件后，webpack会去解析执行这个配置文件，当解析执行完配置文件后，就得到了配置文件中，导出的配置对象
+4. 当webpack拿到配置对象后，就拿到了配置对象中，指定的入口和出口，然后进行打包构建
+
+
+
+# webpack中url-loader的使用
+
+默认情况下，webpack无法处理css文件中的url地址，不管是图片还是字体库，只要是url地址，都处理不了
+
+## 安装url-loader加载器
+
+### 处理图片
+
+1. 安装loader(依赖内部模块file-loader)
+
+   `cnpm i url-loader file-loader -D`	
+
+2. 配置rules
+
+   ~~~
+   {test: /\.(jpg|jpeg|png|gif)$/, use: "url-loader?limit=7631"}
+   ~~~
+
+3. 在加载器后面加?表示传参
+
+4. limit给定的值，是图片的大小，单位是byte，如果我们引用的图片的大小大于等于limit的值，那么久不会被转为base64格式的字符串，如果图片大小小于给定的limit值，就会被转为base64格式的字符串
+
+5. 继续传参让图片名字跟图片的原名称一样
+
+   ~~~
+   {test: /\.(jpeg|jpg|gif|png)$/, use: "url-loader?limit=7631&name=[name].[ext]"}
+   ~~~
+
+6. 配置hash值，让图片拥有唯一的名字hash是32位的key设置取前多少位
+
+   ~~~
+   {test: /\.(jpeg|jpg|gif|png)$/, use: "url-loader?limit=7631&name=[hash: 8]-[name].[ext]"}
+   ~~~
+
+### 处理字体
+
+7. 下载bootstrap@3版本(依赖jquery)   
+
+   注意：这里推荐下载3版本的bootstrap，因为下载4版本会没有字体文件
+
+   `cnpm i bootstrap@3 -D`
+
+8. 在main.js文件中导入bootstrap
+
+   ~~~
+   import '../node_modules/_bootstrap@3.4.1@bootstrap/dist/css/bootstrap.css';
+   ~~~
+
+9. 在配置文件webpack.config.js中配置rules
+
+   ~~~
+   {test: /\.(svg|ttf|woff|woff2|eot)$/, use: "url-loader"}
+   ~~~
+
+   
