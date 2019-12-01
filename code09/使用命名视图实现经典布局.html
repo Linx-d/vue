@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="../lib/vue.js"></script>
+	<script src="../lib/vue-router.js"></script>
+	<style>
+		html, body {
+			padding: 0;
+			margin: 0;
+		}
+		h1{
+			padding: 0;
+			margin: 0;
+			font-size: 16px;
+		}
+		.header {
+			background-color: skyblue;
+			height: 100px;
+		}
+		.container {
+			display: flex;
+		}
+		.left {
+			background-color: hotpink;
+			height: 800px;
+			flex: 2;
+		}
+		.main {
+			background-color: green;
+			height: 800px;
+			flex: 8;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<router-view class="header"></router-view>
+		<div class="container">
+			<router-view name="left" class="left"></router-view>
+			<router-view name="main" class="main"></router-view>	
+		</div>
+		
+	</div>
+
+	<script>
+		var headerBox = {
+			template: "<h1>header头部</h1>"
+		};
+
+		var leftBox = {
+			template: "<h1>left侧边栏</h1>"
+		};
+
+		var mainBox = {
+			template: "<h1>main主体</h1>"
+		};
+
+		var router = new VueRouter({
+			routes: [{
+				path: "/",
+				components: {
+					'default': headerBox,
+					'left': leftBox,
+					'main': mainBox
+				}
+			}]
+		});
+		var vm = new Vue({
+			el: "#app",
+			data: {},
+			methods: {},
+			router
+		});
+	</script>
+</body>
+</html>

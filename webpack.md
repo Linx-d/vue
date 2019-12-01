@@ -489,3 +489,160 @@ console.log(Person.info);
 	console.log(Person.info);
 ~~~
 
+
+
+# vue-webpack结合使用
+
+## 使用resolve节点配置导入完整的vue文件
+
+### 安装：
+
+**安装vue的包 cnpm i vue  -S**
+
+~~~
+你应该将 vue-loader 和 vue-template-compiler 一起安装——除非你是使用自行 fork 版本的 Vue 模板编译器的高阶用户：
+
+npm install -D vue-loader vue-template-compiler
+vue-template-compiler 需要独立安装的原因是你可以单独指定其版本。
+
+每个 vue 包的新版本发布时，一个相应版本的 vue-template-compiler 也会随之发布。编译器的版本必须和基本的 vue 包保持同步，这样 vue-loader 就会生成兼容运行时的代码。这意味着你每次升级项目中的 vue 包时，也应该匹配升级 vue-template-compiler。
+~~~
+
+
+
+​	1.在main.js文件中使用  import Vue from "vue" 导入包，但是这是导入的包是不完整的runtime类型的包，如果需要导入完整的包，需要在webpack.config.js中配置resolve属性
+
+~~~
+resolve: {
+		alias: "vue/dist/vue.js"
+	}
+	这里将alias: "vue/dist/vue.js"  注释掉	
+~~~
+
+​	注意：这个方法虽然方便，但是不能用。因为webpack中，推荐使用 .vue 这个组件模板文件定义组件，所以，需要安装能解析这种文件的loader 
+
+`cnpm i vue-loader vue-template-compiler -D`
+
+
+
+1. ​	在src下创建login.vue文件代码如下
+
+~~~
+<template>
+   <div>
+     <h1>这是使用.vue文件创建的模板</h1>
+   </div>
+</template>
+
+<script>
+
+</script>
+
+<style>
+
+</style>
+~~~
+
+3. 在main.js入口文件中配置导入模板的代码(使用render方法渲染组件 )
+
+~~~
+//入口文件
+
+//console.log('ok');
+
+import Vue from "vue";
+import login from "./login.vue";
+
+/*import Vue from "../node_modules/vue/dist/vue.js";*/
+
+/*var login = {
+	template: "<h1>登录组件</h1>"
+}*/
+
+var vm = new Vue({
+	el: "#app",
+	data: {
+		msg: "123"
+	},
+	method: {},
+	render: c => c(login)
+	/*render简化
+	render: function(createElements){
+		return createElements(login);
+	}*/
+	/*components: {
+		login
+	}*/
+})
+~~~
+
+### 配置：
+
+ Vue Loader 的配置和其它的 loader 不太一样。除了通过一条规则将 `vue-loader` 应用到所有扩展名为 `.vue` 的文件上之外，请确保在你的 webpack 配置中添加 Vue Loader 的插件：
+
+~~~
+// webpack.config.js
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
+
+module.exports = {
+  module: {
+    rules: [
+      // ... 其它规则
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader'
+      }
+    ]
+  },
+  plugins: [
+    // 请确保引入这个插件！
+    new VueLoaderPlugin()
+  ]
+}
+~~~
+
+ **这个插件是必须的！** 它的职责是将你定义过的其它规则复制并应用到 `.vue` 文件里相应语言的块。例如，如果你有一条匹配 `/\.js$/` 的规则，那么它会应用到 `.vue` 文件里的 `script` 块。 
+
+
+
+一个更完整的webpack配置实例：
+
+~~~
+const path = require('path');
+const htmlWebpackPlugin = require('html-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+
+
+//模块输出  输出一个对象 所以是 module.exports
+module.exports = {
+	entry: path.join(__dirname, 'src', 'main.js'),
+	output: {
+		path: path.join(__dirname, 'dist'),
+		filename: "bundle.js"
+	},
+	plugins: [
+	new htmlWebpackPlugin({
+		template: path.join(__dirname, 'src', 'index.html'),
+		filename: "index.html"
+	}),
+	new VueLoaderPlugin()
+	],
+	module: {
+		rules: [
+		{test: /\.css$/, use: ['style-loader', 'css-loader']},
+		{test: /\.less$/, use: ['style-loader', 'css-loader', 'less-loader']},
+		{test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader']},
+		{test: /\.(jpeg|jpg|gif|png)$/, use: "url-loader?limit=200000&name=[hash:8]-[name].[ext]"},
+		{test: /\.(eot|svg|ttf|woff|woff2)$/, use: "url-loader"},
+		{test: /\.js$/, use: "babel-loader", exclude: /node_modules/},
+		{test: /\.vue$/, use: "vue-loader"}
+		]
+	},
+	resolve: {
+		alias: {
+			/*"vue$": "vue/dist/vue.js"*/
+		}
+	}
+}
+~~~
+

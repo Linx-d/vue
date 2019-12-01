@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="../lib/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<!--
+		<input type="button" value="登录" @click="flag=true">
+	    -->
+		<a href="" @click.prevent="flag=true">denglu</a>
+		<input type="button" value="注册" @click="flag=false">
+		<login v-if="flag"></login>
+		<registered v-else="flag"></registered>
+	</div>
+
+	<template id="tp">
+		<div>
+			
+			<h2>登录组件</h2>
+		</div>
+		
+	</template>
+	<template id="tp2">
+		<div>
+			
+			<h2>注册组件</h2>			
+		</div>
+
+	</template>
+	<script>
+		Vue.component("login", {
+			template: "#tp"
+		});
+
+		Vue.component("registered", {
+			template: "#tp2"
+		});
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				flag: true
+			},
+			methods: {}
+		});
+	</script>
+</body>
+</html>

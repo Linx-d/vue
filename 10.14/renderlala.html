@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="lib/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		
+	</div>
+
+	<template id="login">
+		<div>
+			<h1>55</h1>
+			<h3>登录组件</h3>
+		</div>
+		
+	</template>
+	<script>
+		var login = {
+			template: "#login"
+		}
+		var vm = new Vue({
+			el: "#app",
+			data: {},
+			methods: {},
+			render: function(createElement){
+				//这是一个形参，调用这个createElement方法可以将指定的模板对象，编译渲染为html结构字符串
+				return createElement(login);
+				//注意：这里的return 结果，会替换页面中el指定的那个容器
+			}
+		});
+	</script>
+</body>
+</html>

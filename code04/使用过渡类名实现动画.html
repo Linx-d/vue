@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="./lib/vue.js"></script>
+	<style>
+		/*自定义两组样式控制过渡动画 transtion  transform*/
+		.v-enter,
+		.v-leave-to {
+			opacity: 0;
+			-webkit-transform: translateX(400px);
+			-ms-transform: translateX(400px);
+			-o-transform: translateX(400px);
+			transform: translateX(400px);
+		}
+		.v-enter-active,
+		.v-leave-active {
+			transition: all 0.9s ease;
+		}
+
+		.my-enter,
+		.my-leave-to {
+			opacity: 0;
+			-webkit-transform: translateY(400px);
+			-ms-transform: translateY(400px);
+			-o-transform: translateY(400px);
+			transform: translateY(400px);
+		}
+		.my-enter-active,
+		.my-leave-active {
+			transition: all 0.9s ease;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<input type="button" value="变身" @click="flag=!flag">
+		<!-- v-if和v-show的值为false时，元素被显示为隐藏 -->
+
+		<transition>
+			<!--用transition标签把要控制的元素包裹起来-->
+			<h3 v-if="flag">这是一个H3</h3>
+		</transition>
+		
+<hr />
+		<!--自定义v-前缀  name="my"-->
+		<input type="button" value="变身" @click="flag2=!flag2">
+		<!-- v-if和v-show的值为false时，元素被显示为隐藏 -->
+
+		<transition name="my">
+			<!--用transition标签把要控制的元素包裹起来-->
+			<h6 v-if="flag2">这是一个H6</h6>
+		</transition>
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				flag: false,
+				flag2: false 
+			},
+			methods: {}
+		});
+	</script>
+</body>
+</html>

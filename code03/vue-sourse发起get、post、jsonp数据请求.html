@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="./lib/vue.js"></script>
+	<script src="./lib/vue-resource.js"></script>
+</head>
+<body>
+	<div id="app">
+		<input type="button" value="get请求" @click="getData">
+		<input type="button" value="post请求" @click="postData">
+		<input type="button" value="jsonp请求" @click="jsonpData">
+	</div>
+	<script>
+		//get请求地址： http://vue.studyit.io/api/getlunbo
+
+		//post请求地址： http://vue.studyit.io/api/post
+		//jsonp请求地址： http://vue.studyit.io/api/jsonp
+		var vm = new Vue({
+			el: "#app",
+			data: {
+
+			},
+			methods: {
+				getData(){
+					this.$http.get("http://vue.studyit.io/api/getlunbo").then((result)=>{
+						console.log(result);
+					})
+				},
+				postData() {
+					this.$http.post("http://vue.studyit.io/api/post", {}, {emulateJSON: true}).then((result)=>{
+						console.log(result.body);
+					});
+				},
+				jsonpData() {
+					this.$http.jsonp("http://vue.studyit.io/api/jsonp").then((result)=>{
+						console.log(result.body);
+					});
+				}
+			}
+		});
+	</script>
+</body>
+</html>

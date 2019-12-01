@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="./lib/vue.js"></script>
+	<script src="./lib/vue-resource.js"></script>
+	<!-- 最新版本的 起步链接https://v3.bootcss.com/getting-started/ -->
+
+<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" 
+crossorigin="anonymous"></script>
+
+</head>
+<body>
+	<div id="app">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">品牌</h3>
+			</div>
+			<div class="panel-body form-inline">
+				<!-- 数据库中 id的值会自增长所以不用定义-->
+				<!--
+				<label>
+					Id:
+					<input type="text" v-model="msgi" class="form-control">
+				</label>
+				-->
+
+				<label>
+					Name:
+					<input type="text" v-model="msgn" class="form-control">
+				</label>
+
+				<input type="button" value="添加" class="btn btn-primary" @click="add">
+			</div>
+		</div>
+
+		<table class="table table-hover table-striped table-bordered">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Name</th>
+					<th>ctime</th>
+					<th>Opret</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="item in list" :key="item.id">
+					<td>{{ item.id }}</td>
+					<td>{{ item.name }}</td>
+					<td>{{ item.ctime }}</td>
+					<td>
+						<a href="#" @click.prevent="del(item.id)">删除</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>		
+	</div>
+
+	<script>
+		//配置根路径  以后输入路径请求时，就不用在输入全部域名了  因为get，post，jsonp请求都是$http的属性 ，所以配置根路径的这个方法也是vue-resource的方法
+
+		/*如果我们通过全局配置了，请求的数据接口 根域名，
+		则，在每次单独发起http请求的时候，请求的根路径，
+		应该以相对路径开头，前面不能带/，
+		否则不会启用根路径做拼接
+		*/
+		Vue.http.options.root = "http://vue.studyit.io/";
+
+		//全局配置emulateJSON  
+		//全局启用emulateJSON选项
+		Vue.http.options.emulateJSON = true;
+
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				msgn: "",
+				list: [{
+					id: "1",
+					name: "宝马",
+					ctime: new Date()
+				},
+				{
+					id: "2",
+					name: "宝骏",
+					ctime: new Date()
+				}]
+			},
+			//在最早能调用方法的生命周期函数created中调用getMessage方法
+			created(){
+				//访问vue中的数据和方法 要加上this.
+
+				this.getMessage();
+			},
+			methods: {
+				getMessage() {
+					this.$http.get("api/getprodlist").then((result)=>{
+						var result = result.body;
+						if(result.status === 0) {
+							this.list = result.message;
+						}else{
+							alert("请求失败~~~");
+						}
+					});
+				},
+				/*add() {
+					this.$http.post("addproduct", {name: this.name}, {emulateJSON: true}).then(result=>{
+						if(result.body.status === 0){
+							this.getMessage();
+							this.name="";
+						}else{
+							alert("请求失败~~~");
+						}
+					});
+				},*/
+				add() {
+					this.$http.post("addproduct", {name: this.name}).then(result=>{
+						if(result.body.status === 0){
+							this.getMessage();
+							this.name="";
+						}else{
+							alert("请求失败~~~");
+						}
+					});
+				},
+				del(id) {
+					this.$http.get("delproduct/" + id).then(result=>{
+						if(result.body.status === 0){
+							this.getMessage();
+						}else{
+							alert("请求失败~~~");
+						}
+					});
+				}
+			}
+		});
+	</script>
+</body>
+</html>

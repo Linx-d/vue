@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="./lib/vue.js"></script>
+	<script src="./lib/vue-resource.js"></script>
+</head>
+<body>
+	<div id="app">
+		<input type="button" value="get数据请求" @click="getData">
+		<br />
+		<input type="button" value="post数据请求" @click="postData">
+		<input type="button" value="jsonp数据请求" @click="jsonpData">
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {},
+			method: {
+				//使用rul模块中的parse函数时，要传入第二个参数true，才可以把query转为一个对象
+				getData() {
+					this.$http.get("url").then((result)=>{
+						//这里返回的数据result要访问body属性，可以拿到服务器返回的成功的数据
+						console.log(result.body);
+					});
+				},
+				postData() {
+					//通过post方法的第三个参数{emulataJSON: true}，设置提交的内容类型为葡萄表单格式
+					this.$http.post("url", {}, {emulateJSON: true}).then((result)=>{
+						console.log(result.body);
+					});
+				},
+				jsonpData() {
+					this.$http.jsonp("url").then((result)=>{
+						console.log(result.body);
+					});
+				}
+			}
+		});
+	</script>
+</body>
+</html>

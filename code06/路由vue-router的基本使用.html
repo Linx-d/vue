@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="../lib/vue.js"></script>
+	<script src="../lib/vue-router.js"></script>
+	<style>
+		.router-link-active,
+		.myActive {
+			color: red;
+			font-size: 40px;
+			background-color: pink;
+			font-style: italic;
+			text-decoration: overline;
+		}
+		.v-enter,
+		.v-leave-to {
+			opacity: 0;
+			transform: translateX(150px);
+		}
+		.v-enter-active,
+		.v-leave-active {
+			transition: all 0.5s ease;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<!--router-link标签和to属性的学习-->
+		<!--
+		<a href="#/login">登录</a>
+		<a href="#/register">注册</a>
+		-->
+		<!--tag属性可以定义该元素被渲染为指定元素
+		<router-link to="/login" tag="span">登录</router-link>-->
+		<router-link to="/login?id=8&name=hi">登录</router-link>
+		<router-link to="/register">注册</router-link>
+		<transition mode="out-in">
+			<router-view></router-view>
+		</transition>
+		
+	</div>
+
+	<template id="login">
+		<h1>登录组件-----------{{ $route.query.id }}------{{ $route.query.name }}--------{{ msg }}</h1>
+	</template>
+	<template id="register">
+		<h1>注册组件</h1>
+	</template>
+	<script>
+		var login = {
+			data(){
+				return {
+					msg: "hello word"
+				};
+			},
+			template: "#login",
+			created(){
+				console.log(this.$route.query.id+this.$route.query.name);
+			}
+		};
+		var register = {
+			template: "#register"
+		};
+		var routerobj = new VueRouter({
+			routes: [
+			{
+				path: "/",
+				redirect: "login"
+			},{
+				path: "/login",
+				component: login
+			},
+			{
+				path: "/register",
+				component: register
+			}],
+			linkActiveClass: "myActive"
+		});
+		var vm = new Vue({
+			el: "#app",
+			data: {},
+			methods: {},
+			router: routerobj
+		});
+	</script>
+</body>
+</html>

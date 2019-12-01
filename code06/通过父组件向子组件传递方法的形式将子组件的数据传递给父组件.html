@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="../lib/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<tmpl @func="show"></tmpl>
+	</div>
+
+	<template id="transfer">
+		<div>
+			<h1>这是子组件</h1>
+			<input type="button" value="父组件传递方法给子组件" @click="myclick">
+		</div>
+		
+	</template>
+	<script>
+		var tmpl = {
+			data: function(){
+				return {sommsg: {name: "大头儿子", age: 6}};
+			},
+			template: "#transfer",
+			methods: {
+				myclick(){
+					this.$emit('func', this.sommsg);
+				}
+			}
+		};
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				msg: null
+			},
+			methods: {
+				show(data){
+					console.log("这是父组件的方法"+data);
+					this.msg=data
+				}
+			},
+			components: {
+				tmpl
+			}
+		});
+	</script>
+</body>
+</html>

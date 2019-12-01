@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="../lib/vue.js"></script>
+	<!-- 最新版本的 起步链接https://v3.bootcss.com/getting-started/ -->
+
+<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" 
+crossorigin="anonymous"></script>
+</head>
+<body>
+	<div id="app">
+		<post-ct @func="refresh"></post-ct>
+		<ul class="list-group">
+			<li class="list-group-item" v-for="(item, i) in list" :key="i">
+				<span class="badge">评论人：{{ item.user }}</span>
+				评论内容：{{ item.content }}
+			</li>
+		</ul>
+	</div>
+
+<template id="ct">
+	<div>
+		<div class="form-group">
+			<label>用户:</label>
+			<input type="text" class="form-control" v-model="user">
+		</div>
+
+		<div class="form-group">
+			<label>评论：</label>
+			<textarea class="form-control" v-model="content"></textarea>
+		</div>
+
+		<input type="button" value="提交" class="form-primary" @click="add">
+	</div>
+</template>
+	<script>
+		var tmp = {
+			data: function(){
+				return {
+					user: "",
+					content: ""
+				};
+			},
+			template: "#ct",
+			methods: {
+				add(){
+					var arr = JSON.parse(localStorage.getItem("info") || '[]');
+					arr.unshift({"id": Date.now(), "user": this.user, "content": this.content});
+					arr = JSON.stringify(arr);
+					localStorage.setItem("info", arr);
+					this.user=this.content='';
+					this.$emit('func');
+				}
+			}
+		};
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				list: [{
+					"id": Date.now(),
+					"user": "礼拜",
+					"content": "李白乘舟将欲行"
+				},
+				{
+					"id": Date.now(),
+					"user": "王维",
+					"content": "忽闻岸上踏歌声"
+				},
+				{
+					"id": Date.now(),
+					"user": "赵高",
+					"content": "指鹿为马"
+				}]
+			},
+			created(){
+				this.refresh();
+			},
+			methods: {
+				refresh(){
+					var list = JSON.parse(localStorage.getItem("info") || '[]');
+					this.list = list;
+				}
+			},
+			components: {
+				"post-ct": tmp
+			}
+		});
+	</script>
+</body>
+</html>

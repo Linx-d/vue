@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="../lib/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<login></login>
+	</div>
+	<template id="tp2">
+		<div>
+			<h1>H1111111</h1>
+			<span>spanspan</span>
+		</div>
+	</template>
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {},
+			methods: {},
+			components: {
+				"login": {
+					template: "#tp2"
+				}
+			}
+		});
+	</script>
+</body>
+</html>

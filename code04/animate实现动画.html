@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="./lib/vue.js"></script>
+	<link rel="stylesheet" href="./lib/animate.css">
+</head>
+<body>
+	<div id="app">
+		<input type="button" value="toggle" @click="flag=!flag">
+		<!--
+		<transition :duration="200" enter-active-class="bounceIn" leave-active-class="bounceOut">
+			<h3 v-if="flag" class="animated">这是一个H3</h3>
+		</transition>
+		-->
+
+		<transition :duration="{enter: 200, leave: 400}" enter-active-class="bounceIn" leave-active-class="bounceOut">
+			<h3 v-if="flag" class="animated">这是一个H3</h3>
+		</transition>
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				flag: false
+			},
+			methods: {}
+		});
+	</script>
+</body>
+</html>

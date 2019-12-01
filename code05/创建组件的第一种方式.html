@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="../lib/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<my-com1></my-com1>
+	</div>
+
+	<script>
+		var com1 = Vue.extend({
+			template: "<h2>这是一个H2标签</h2>"
+		});
+		//这里组件的名称如果是使用了驼峰命名法，在使用组件的时候要将大写字母转为小写字母，并且在前面用-隔开。如果没有使用驼峰命名法，就直接使用组件名称。
+		Vue.component("myCom1", com1);
+		var vm = new Vue({
+			el: "#app",
+			data: {},
+			methods: {}
+		});
+	</script>
+</body>
+</html>

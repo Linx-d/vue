@@ -5,6 +5,9 @@
 ~~~
 shift home选择这一行
 ctrl d 选择页面中所有的选中的代码
+ctrl shift d  向下复制当前行
+
+opacity(不透明度) 为0时,元素显示为隐藏，为100时，元素显示。
 ~~~
 
 
@@ -702,7 +705,7 @@ sym符号
 
 - v-for循环的时候，key属性只能使用number或者string
 - key在使用的时候，必须使用v-bind属性绑定的形式，指定key的值
-- 在组件中，使用v-for循环的时候，或者在一些特殊星狂中，如果v-for有问题，必须在使用v-for的同事，指定唯一的字符串/数字类型     :key的值
+- 在组件中，使用v-for循环的时候，或者在一些特睡情况中，如果v-for有问题，必须在使用v-for的同时，指定唯一的字符串/数字类型     :key的值
 
 ````html
 <!DOCTYPE html>
@@ -990,3 +993,219 @@ v-show 有较高的初始渲染消耗
 </html>
 ````
 
+
+
+#### 字符串的padStart和padEnd方法使用
+
+````javascript
+	//用于补全字符串 
+	//padStart用于在字符串开始位置补全
+	String.property.padStart(length, "补充的字符串");
+	//padEnd用于在字符串结束位置补全
+	String.property.padEnd(length, "补充的字符串");
+````
+
+
+
+#### 键盘事件keyup
+
+~~~
+使用vue绑定keyup事件(键盘抬起事件)：
+	v-on:keyup="add" 	
+	简写为： @keyup="add"
+~~~
+
+##### 按键事件修饰符
+
+- .enter  在事件后加.enter 为该事件绑定按键修饰符
+  - 作用：只有当enter键抬起的时候触发事件而不会是所有按键抬起时都触发事件
+
+- Vue 中还提供了这些按键修饰符
+  - .up
+  - .left
+  - .down
+  - .right
+  - .space
+  - .tab
+  - .enter
+  - .esc
+  - .delete
+
+
+
+##### 自定义全局按键修饰符
+
+1.通过`Vue.config.keycodes.名称=按键值`来自定义按键修饰符的别名
+
+````javascript
+	语法：
+	Vue.config.keyCodes.f2 = 113;
+	解析：
+    f2为自定义按键修饰符名称，113为按键码。
+    在调用按键修饰符时，就可以直接使用 .f2  作为按键修饰符
+````
+
+
+
+##### 2.使用自定义的按键修饰符
+
+~~~
+<input type="text" v-model="name" @keyup.f2="add" 
+//还可以设置class类  class="form-control"
+~~~
+
+
+
+[3.js里面的键盘事件对应的码键（键盘码）](http://www.cnblogs.com/wuhua1/p/6686237.html)
+
+
+
+#### 自定义全局指令让文本框获得焦点
+
+1.通过在全局对象中定义 也就是在script标签中定义
+
+````javascript
+//通过Vue.directive("指令名称",{});第一个参数为指令名称，第二个参数为对象，对象中包含了一些自定义指令的方法。对象中的方法的第一个参数必须为el(被绑定了指令的那个元素)，是一个原生的jsdom对象，可以直接调用dom元素的方法。
+
+//在声明的时候不用在名称前面加 v-前缀，但是在调用的时候，必须在指令名前面加上 v- 前缀来进行调用
+
+//使用dom操作进行为文本框获取焦点，假设文本框id为one，代码如下
+//document.getElementById("one").focus();
+Vue.directive("focus",{
+    bind: function(){
+        //当指令绑定到元素上时执行的方法，只触发一次。
+    },
+    inserted: function(el){
+        //当元素插入到DOM中去执行的方法，只触发一次
+        //和JS行为有关的操作，最好在inserted中去执行，防止JS行为不生效
+        el.focus();
+    },
+    updated: function(){
+        //当vnode更新的时候执行的方法，可能触发多次
+    }
+});
+````
+
+
+
+#### 定义私有指令和指令的简写形式
+
+1. 在私有vue实例中定义与filters，methods，data，el同级
+
+````javascript
+directives: {
+    color: {
+        bind: function(el, binding){
+            el.style.color = binding.value;
+        }
+        /*带有function的方法在es6中可以写为
+        bind(el, binding){
+        	el.style.color = binding.value;
+        }
+        */
+    }，
+    //简写形式
+    //带有特殊符号的属性名，需要用引号包裹
+    'font-size': function(el, binding){
+        //使用style定义样式时，字体属性font-size应写为驼峰命名法fontSize
+        el.style.fontSize = parseInt(binding.value)+"px";
+    }/*带有function的方法可以在es6中可以写为
+    'font-size'(el, binding){
+    	el.style.fontSize = parseInt(binding.value)+"px";
+    }
+    */
+}    
+````
+
+
+
+2.调用
+
+````html
+<div id="#app2">
+    <p v-color="'red'" v-font-size="'50px'">
+        {{ ctime }}
+    </p>
+</div>
+````
+
+
+
+# VUE生命周期
+
+## 完全创建vue实例
+
+1. 创建vue实例之前
+
+执行第一个声明周期函数beforeCreate，这时候data中的数据，methods中的方法都没有被初始化，还不能访问
+
+````javascript
+beforeCreate(){
+
+}
+````
+
+
+
+2. vue实例创建好之后 
+
+执行生命周期函数created，这时，data中的数据和methods中的方法都被初始化好了，最早，也只能在这个函数中，访问data中的数据和methods中的方法。
+
+
+
+3. Vue开始编辑模板，在Vue代码中的那些指令进行执行，最终，在内存中生成一个编译好的最终模板字符串，然后在内存中将模板字符串渲染成DOM，注意，在此时，只是在内存中渲染好了模板，并没有把模板挂载到真正的页面中去。
+
+
+
+4. 执行生命周期beforeMount函数，表示模板已经在内存中编辑完成了。但是尚未把模板渲染到的页面中去。
+
+``在beforeMount执行的时候，页面中的元素，还没有被真正替换过来，只是之前写的一些模板字符串``
+
+
+
+5. 执行第四个声明周期函数mounted 表示，内存中的模板，已经真实的挂载到了页面中，用户已经可以看到渲染好的页面了。
+
+~~~
+只要执行完了mounted，就表示整个Vue实例已经初始化完毕了；
+此时，组件已经拖了创建阶段，进入到了运行阶段
+~~~
+
+## 执行阶段（在数据被更新时触发，执行次数为0-n次）
+
+1. beforeUpdate生命周期函数，这时内存中的数据已经被更新，页面中的数据还没有更新。
+2. updated生命周期函数，这时页面和内存中的数据同步，都更新了
+
+
+
+## 销毁阶段（在关闭浏览器时触发）
+
+1. beforeDestroy生命周期函数，这时的数据，方法，指令，并没有被删除
+2. destroy生命周期函数，这时所有的数据，方法，指令，都已经被删除了
+
+
+
+# Vue.resourse
+
+1. 导入包，基于vue，先导入vue的包，在导入vue-resourse的包
+
+~~~
+相当于挂载在vue上的属性。
+
+在vue实例中的方法中定义 通过this.$http.get(url,[option]).then(successCalback, failureCalback);
+
+通过.then拿到服务器返回的数据。  看到.then就要清楚这个方法是通过promise封装的
+
+successCalback成功的回调必须要传，后边failureCalback失败的回调是可选的
+这里的option和failure都是可选的 
+
+~~~
+
+
+
++ get请求地址：  http：//vue.studyit.io/api/getlunbo
+
+this.$http.post("someurl", {}, {emulate: true}).then((result)=>{
+
+console.log(result.body);
+
+});

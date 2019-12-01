@@ -25,14 +25,14 @@
 			    </label>
 
 			    <label>Name: 
-			    	<input type="text" class="form-control" v-model="name">
+			    	<input type="text" class="form-control" v-model="name" @keyup.enter="add">
 			    </label>
 
 			    <!-- v-on:(@)事件绑定 的值可以加括号，加了括号就可以传参数-->
 			    <input type="button" value="添加" class="btn btn-primary" @click="add">
 
 			    <label>搜索关键词：
-			    	<input type="text" class="form-control" v-model="keywords">
+			    	<input type="text" class="form-control" v-model="keywords" v-focus v-color="'red'">
 			    </label>
 			</div>
 		</div>		
@@ -60,27 +60,74 @@
 	</div>
 
 		<div id="app2">
-			<p>{{ strDate | changeTime }}</p>
+			<p v-font-size="'100px'" v-font-weight=200 v-color="'pink'">{{ strDate | changeTime }}</p>
 		</div>
 	<script>
+		//全局过滤器
 		Vue.filter('changeTime',function(strDate,msg=""){
 			var newDate = new Date(strDate);
 			var y = newDate.getFullYear();
-			var m = newDate.getMonth();
-			var d = newDate.getDate();
+			var m = (newDate.getMonth()+1).toString().padStart(2,"0");
+			var d = newDate.getDate().toString().padStart(2, "0");
 			if(msg.toLowerCase()=="yyyy-mm-dd"){
 			//return y+'-'+m+'-'+d;
 
 			//return `$(y)-$(m)-$(d)`;  这里使用模板字符串时，占位符应该使用${};
 			return `${y}-${m}-${d}`;
 		}else{
-			var h = newDate.getHours();
-			var f = newDate.getMinutes();
-			var s = newDate.getSeconds();
+			var h = newDate.getHours().toString().padStart(2, "0");
+			var f = newDate.getMinutes().toString().padStart(2, "0");
+			var s = newDate.getSeconds().toString().padStart(2, "0");
 			return `${y}-${m}-${d} ${h}:${f}:${s}`;
 		}
 			
 		});
+
+		//自定义全局按键修饰符
+		Vue.config.keyCodes.f2 = 113;
+
+		// 自定义全局指令
+		Vue.directive("focus", {
+			bind: function(){ 
+			    //当指令绑定到元素上时执行的方法【只触发一次】
+				//注意：在每个函数中，第一个参数永远是el， 表示 被绑定的指令的那个元素，这个el参数，是一个原生的js对象
+				//使用DOM操作调用.focus(); 方法。代码如下
+				//document.getElementById("one").focus();
+
+				//因为 一个元素，只有在插入DOM之后才能获取焦点 所以在bind中使用 el.focus会失效
+
+			},
+			inserted: function(el){ //当DOM元素插入到页面中时执行的方法【只触发一次】
+				//ctrl+右键 自动缩进到输入代码的位置
+				el.focus();//方法
+				//和JS行为有关的操作，最好在inserted中去执行，防止JS行为不生效
+
+			},
+			update: function(){ //当vnode更新的时候执行的方法【有可能执行多次】
+
+			}
+		});
+
+		//自定义 一个设置字体颜色的 局部指令
+		/*Vue.directive("color",{
+			bind: function(el, binding){
+				//和样式相关的操作，一般可以在bind中执行。
+				el.style.color = binding.value;
+				console.log(binding.name);
+			},
+		});*/
+		
+		
+        Vue.directive('color',{
+			bind(el, binding){
+					el.style.color = binding.value;
+				}
+			});
+		Vue.directive('font-weight',{
+			bind(el, binding2){
+				el.style.fontWeight = binding2.value;
+			}
+		})
 
 		var vm = new Vue({
 			el: "#app",
@@ -151,20 +198,32 @@
 				//调用过滤器的时候，如果私有过滤器和全局过滤器的名称相同，则遵循先私有后全局的就近调用原则
 				changeTime(strDate,msg=""){
 					var newDate = new Date(strDate);
-					var y = newDate.getFullYear();
-					var m = newDate.getMonth();
-					var d = newDate.getDate();
+					var y = newDate.getFullYear().toString().padStart(2, "0");
+					var m = (newDate.getMonth()+1).toString().padStart(2, "0");
+					var d = newDate.getDate().toString().padStart(2, "0");
 					if(msg.toLowerCase()=="yyyy-mm-dd"){
 					//return y+'-'+m+'-'+d;
 
 					//return `$(y)-$(m)-$(d)`;  这里使用模板字符串时，占位符应该使用${};
 					return `${y}-${m}-${d}`;
 				}else{
-					var h = newDate.getHours();
-					var f = newDate.getMinutes();
-					var s = newDate.getSeconds();
+					var h = newDate.getHours().toString().padStart(2, "0");
+					var f = newDate.getMinutes().toString().padStart(2, "0");
+					var s = newDate.getSeconds().toString().padStart(2, "0");
 					return `${y}-${m}-${d} ${h}:${f}:${s}++++++++`;
 				}
+				}
+			},
+			directives: {
+				'font-weight': {
+					bind(el, binding2){
+						el.style.fontWeight = binding2.value;
+					}
+				},
+				'font-size': function(el, binding){
+				//注意 这个function等同于把代码写到了bind和 update中去
+				//可以写为'font-size'(){}
+					el.style.fontSize = parseInt(binding.value)+"px";
 				}
 			}
 		});

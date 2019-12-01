@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="./lib/vue.js"></script>
+	<style>
+		li {
+			border: 1px dashed #111;
+			margin: 10px;
+			line-height: 35px;
+			font-size: 14px;
+			padding-left: 10px;
+			list-style-type: none;
+			width: 100%;
+		}
+
+		.v-enter,
+		.v-leave-to {
+			transform: translateY(80px);
+		}
+		.v-enter-active,
+		.v-leave-active {
+			transition: all 0.8s ease;
+		}
+
+		.v-move {
+			transition: all 0.5s ease;
+		}
+		.v-leave-active {
+			position: absolute;
+		}
+
+		li:hover {
+			background-color: hotpink;
+			-webkit-transition: all 0.7s ease;
+			-o-transition: all 0.7s ease;
+			transition: all 0.7s ease;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<form>
+			<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;Id: <input type="text" v-model="msg"></label>
+			<label>Name: <input type="text" v-model="msg2"></label>
+			<input type="button" value="添加" @click="add">
+		</form>
+
+		<transition-group tag="ul" appear>
+			<li v-for="(item, i) in list" :key="item.id" @click="del(i)">{{ item.id }}--------{{ item.name }}</li>
+		</transition-group>
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				msg: "",
+				msg2: "",
+				list: [{
+					id: "1",
+					name: "赵高"
+				},
+				{
+					id: "2",
+					name: "魏忠贤"
+				},
+				{
+					id: "3",
+					name: "刘瑾"
+				},
+				{
+					id: "4",
+					name: "董卓"
+				}]
+			},
+			methods: {
+				add() {
+					this.list.push({id: this.msg, name: this.msg2});
+				},
+				del(i) {
+					this.list.splice(i, 1);
+				}
+			}
+		});
+	</script>
+</body>
+</html>
